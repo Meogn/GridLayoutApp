@@ -60,6 +60,7 @@ public class MainActivity extends Activity implements OnClickListener {
         textViews = (TextView) findViewById(R.id.textViews);
         textView = (TextView) findViewById(R.id.textView);
         addNum = true;
+        //
     }
 
     public void onClick(View v){
