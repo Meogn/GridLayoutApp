@@ -9,6 +9,7 @@ import android.app.Activity;
 public class MainActivity extends Activity implements OnClickListener {
 
     private TextView textView;
+    private TextView textViews;
     private String str,num1,num2;
     private double result;
     private boolean addNum;
@@ -24,6 +25,10 @@ public class MainActivity extends Activity implements OnClickListener {
         buttonmul.setOnClickListener(this);
         Button buttondiv= (Button)findViewById(R.id.buttondiv);
         buttondiv.setOnClickListener(this);
+        Button buttonsqu= (Button) findViewById(R.id.buttonsqu);
+        buttonsqu.setOnClickListener(this);
+        Button buttonfac= (Button) findViewById(R.id.buttonfac);
+        buttonfac.setOnClickListener(this);
         Button button0= (Button)findViewById(R.id.button0);
         button0.setOnClickListener(this);
         Button button1= (Button)findViewById(R.id.button1);
@@ -52,33 +57,41 @@ public class MainActivity extends Activity implements OnClickListener {
         buttond.setOnClickListener(this);
         Button buttonc=(Button)findViewById(R.id.buttonc);
         buttonc.setOnClickListener(this);
+        textViews = (TextView) findViewById(R.id.textViews);
         textView = (TextView) findViewById(R.id.textView);
         addNum = true;
     }
 
     public void onClick(View v){
-        str = (String) textView.getText();
+        str = (String) textViews.getText();
         switch (v.getId()) {
             case R.id.buttonc:
+                textViews.setText("");
                 textView.setText("");
                 break;
             case R.id.buttond:
                 if(!str.equals("") && str != null){
-                    textView.setText(str.substring(0, str.length()-1));
+                    textViews.setText(str.substring(0, str.length()-1));
                 }
                 break;
             case R.id.buttonequ:
                 if(str.contains("+")){
-                    calculate(num1, num2, "+");
+                    calculate1(num1, num2, "+");
                 }
                 else if(str.contains("-")){
-                    calculate(num1, num2, "-");
+                    calculate1(num1, num2, "-");
                 }
                 else if(str.contains("*")){
-                    calculate(num1, num2, "*");
+                    calculate1(num1, num2, "*");
                 }
                 else if(str.contains("/")){
-                    calculate(num1, num2, "/");
+                    calculate1(num1, num2, "/");
+                }
+                else if(str.contains("X2")) {
+                    calculate2(num1,"X2");
+                }
+                else if(str.contains("X!")) {
+                    calculate2(num1,"X!");
                 }
                 else {
                     return;
@@ -91,21 +104,21 @@ public class MainActivity extends Activity implements OnClickListener {
                 if (str.contains("+")||str.contains("-")||str.contains("*")||str.contains("/"))
                     return;
                 else
-                    textView.setText(str+((Button)v).getText());
+                    textViews.setText(str+((Button)v).getText());
                 if(!addNum)
                     addNum = true;
                 break;
             default:
                 if (addNum) {
-                    textView.setText(str+((Button)v).getText());
+                    textViews.setText(str+((Button)v).getText());
                 }else{
-                    textView.setText(((Button)v).getText());
+                    textViews.setText(((Button)v).getText());
                     addNum = true;
                 }
                 break;
         }
     }
-    private void calculate(String num1,String num2,String op) {
+    private void calculate1(String num1,String num2,String op) {
         num1 = str.substring(0,str.indexOf(op));
         num2 = str.substring(str.indexOf(op)+1);
         double n1 = Double.parseDouble(num1);
@@ -117,8 +130,38 @@ public class MainActivity extends Activity implements OnClickListener {
         }else if(op.equals("*")){
             result = n1*n2;
         }else if(op.equals("/")){
-            result = n1/n2;
+            result = n1 / n2;
         }else {
+            return;
+        }
+        String r = result+"";
+        if(r.contains(".")&&r.substring(r.length()-1).equals("0")){
+            r = r.substring(0,r.indexOf("."));
+        }
+        if(op.equals("/")) {
+            if(n2==0)
+                textView.setText("除数不能为0！");
+            else
+                textView.setText(r);
+        }
+        else {
+            textView.setText(r);
+        }
+        addNum = false;
+    }
+    private void calculate2(String num1,String op) {
+        double i;
+        num1 = str.substring(0,str.indexOf(op));
+        double n1 = Double.parseDouble(num1);
+        if(op.equals("X2")) {
+            result = n1 * n1;
+        }else if(op.equals("X!")) {
+            result = 1;
+            for(i = n1;i>0;i--) {
+                result = result * i;
+            }
+        }
+        else {
             return;
         }
         String r = result+"";
